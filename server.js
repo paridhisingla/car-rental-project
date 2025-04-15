@@ -99,7 +99,24 @@ app.post("/bookings", (req, res) => {
 
   car.available = false;
   data.bookings.push(newBooking);
-  res.redirect("/bookings");
+  
+  // Redirect to booking success page with the booking ID
+  res.redirect(`/bookings/${newBooking.id}/success`);
+});
+
+// New route for booking success
+app.get("/bookings/:id/success", (req, res) => {
+  const booking = data.bookings.find(b => b.id === req.params.id);
+  if (!booking) return res.status(404).send("Booking not found");
+  
+  const car = data.cars.find(c => c.id === booking.carId);
+  
+  res.render("booking-success", {
+    userName: booking.userName,
+    carName: car ? car.name : "Unknown Car",
+    startDate: booking.startDate,
+    endDate: booking.endDate
+  });
 });
 
 app.delete("/bookings/:id", (req, res) => {

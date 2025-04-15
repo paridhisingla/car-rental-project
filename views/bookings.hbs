@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Booking Success</title>
+  <title>All Bookings</title>
 
   <style>
     body {
@@ -14,7 +14,7 @@
     }
 
     .container {
-      max-width: 800px;
+      max-width: 1000px;
       margin: 50px auto;
       padding: 20px;
       background-color: white;
@@ -23,116 +23,163 @@
     }
 
     h1 {
-      color: #28a745;
+      color: #333;
       text-align: center;
       font-size: 2.5em;
-      margin-bottom: 20px;
+      margin-bottom: 30px;
     }
 
-    .details-list {
-      list-style-type: none;
-      padding: 0;
+    .booking-card {
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+      padding: 20px;
+      border-left: 5px solid #007bff;
+    }
+
+    .booking-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 15px;
+    }
+
+    .booking-title {
+      font-size: 1.3em;
+      font-weight: bold;
+      color: #333;
       margin: 0;
     }
 
-    .details-list li {
-      background-color: #f1f1f1;
-      margin: 10px 0;
-      padding: 15px;
-      border-radius: 5px;
+    .booking-date {
+      color: #555;
+      font-style: italic;
+    }
+
+    .booking-details {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 15px;
+    }
+
+    .detail-item {
+      margin-bottom: 10px;
+    }
+
+    .detail-label {
+      font-weight: bold;
+      display: block;
+      color: #666;
+      margin-bottom: 5px;
+    }
+
+    .detail-value {
       font-size: 1.1em;
     }
 
-    .details-list li span {
-      font-weight: bold;
+    .action-buttons {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 15px;
     }
 
     .button {
       display: inline-block;
-      padding: 10px 20px;
+      padding: 8px 16px;
       background-color: #007bff;
       color: white;
       text-decoration: none;
-      border-radius: 5px;
+      border-radius: 4px;
       text-align: center;
-      margin-top: 20px;
+      margin-left: 10px;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .button.danger {
+      background-color: #dc3545;
     }
 
     .button:hover {
-      background-color: #0056b3;
+      opacity: 0.9;
     }
 
-    .back-link {
+    .new-booking-btn {
       display: block;
+      margin: 30px auto 0;
+      width: 200px;
+      padding: 12px;
       text-align: center;
-      margin-top: 30px;
-      font-size: 1.1em;
+      font-size: 16px;
     }
 
-    .back-link a {
-      color: #007bff;
-      text-decoration: none;
-    }
-
-    .back-link a:hover {
-      text-decoration: underline;
+    .empty-message {
+      text-align: center;
+      padding: 40px;
+      color: #666;
+      font-size: 18px;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Booking Confirmed!</h1>
+    <h1>All Bookings</h1>
     
-    <!-- Display Booking Details -->
-    <ul class="details-list">
-      <li><span>Name:</span> {{userName}}</li>
-      <li><span>Car:</span> {{carName}}</li>
-      <li><span>Start Date:</span> {{startDate}}</li>
-      <li><span>End Date:</span> {{endDate}}</li>
-    </ul>
+    {{#if bookings.length}}
+      {{#each bookings}}
+        <div class="booking-card">
+          <div class="booking-header">
+            <h3 class="booking-title">Booking by {{this.userName}}</h3>
+            <span class="booking-date">ID: {{this.id}}</span>
+          </div>
+          
+          <div class="booking-details">
+            <div class="detail-item">
+              <span class="detail-label">Customer Name</span>
+              <span class="detail-value">{{this.userName}}</span>
+            </div>
+            
+            <div class="detail-item">
+              <span class="detail-label">Car</span>
+              <span class="detail-value">{{this.carName}}</span>
+            </div>
+            
+            <div class="detail-item">
+              <span class="detail-label">Start Date</span>
+              <span class="detail-value">{{this.startDate}}</span>
+            </div>
+            
+            <div class="detail-item">
+              <span class="detail-label">End Date</span>
+              <span class="detail-value">{{this.endDate}}</span>
+            </div>
+            
+            <div class="detail-item">
+              <span class="detail-label">Total Days</span>
+              <span class="detail-value">{{this.totalDays}}</span>
+            </div>
+            
+            <div class="detail-item">
+              <span class="detail-label">Total Price</span>
+              <span class="detail-value">${{this.totalPrice}}</span>
+            </div>
+          </div>
+          
+          <div class="action-buttons">
+            <form action="/bookings/{{this.id}}?_method=DELETE" method="POST">
+              <button type="submit" class="button danger">Cancel Booking</button>
+            </form>
+          </div>
+        </div>
+      {{/each}}
+    {{else}}
+      <div class="empty-message">
+        <p>No bookings found. Create your first booking now!</p>
+      </div>
+    {{/if}}
     
-    <!-- Link to View All Bookings -->
-    <div class="back-link">
-      <p><a href="/bookings">View all bookings</a></p>
-    </div>
-
-    <!-- Link to Make Another Booking -->
-    <div class="button">
-      <a href="/bookings/new">Make Another Booking</a>
-    </div>
+    <a href="/bookings/new" class="button new-booking-btn">Make New Booking</a>
   </div>
-
-  <script>
-    try {
-      // Check if all necessary data is available
-      const userName = "{{userName}}";
-      const carName = "{{carName}}";
-      const startDate = "{{startDate}}";
-      const endDate = "{{endDate}}";
-
-      if (userName && carName && startDate && endDate) {
-        // Save the booking to localStorage when the page is loaded
-        const bookingData = {
-          userName: userName,
-          carName: carName,
-          startDate: startDate,
-          endDate: endDate
-        };
-
-        // Get existing bookings from localStorage or initialize an empty array
-        let bookings = JSON.parse(localStorage.getItem('bookings')) || [];
-        
-        // Push new booking data to the bookings array
-        bookings.push(bookingData);
-        
-        // Save the updated bookings array back to localStorage
-        localStorage.setItem('bookings', JSON.stringify(bookings));
-      } else {
-        console.error('Booking data is missing!');
-      }
-    } catch (error) {
-      console.error('Error saving to localStorage:', error);
-    }
-  </script>
 </body>
 </html>

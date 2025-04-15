@@ -61,21 +61,11 @@
     .button:hover {
       background-color: #0056b3;
     }
-
-    .back-link {
-      display: block;
-      text-align: center;
+    
+    .buttons-container {
+      display: flex;
+      justify-content: space-around;
       margin-top: 30px;
-      font-size: 1.1em;
-    }
-
-    .back-link a {
-      color: #007bff;
-      text-decoration: none;
-    }
-
-    .back-link a:hover {
-      text-decoration: underline;
     }
   </style>
 </head>
@@ -91,12 +81,9 @@
       <li><span>End Date:</span> {{endDate}}</li>
     </ul>
     
-    <div class="back-link">
-      <p><a href="/bookings">View all bookings</a></p>
-    </div>
-
-    <div class="button">
-      <a href="/bookings/new">Make Another Booking</a>
+    <div class="buttons-container">
+      <a href="/bookings" class="button">View All Bookings</a>
+      <a href="/bookings/new" class="button">Make Another Booking</a>
     </div>
   </div>
 
