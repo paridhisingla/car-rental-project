@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Booking Success</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      color: #28a745;
+      text-align: center;
+      font-size: 2.5em;
+      margin-bottom: 20px;
+    }
+
+    .details-list {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .details-list li {
+      background-color: #f1f1f1;
+      margin: 10px 0;
+      padding: 15px;
+      border-radius: 5px;
+      font-size: 1.1em;
+    }
+
+    .details-list li span {
+      font-weight: bold;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .button:hover {
+      background-color: #0056b3;
+    }
+
+    .back-link {
+      display: block;
+      text-align: center;
+      margin-top: 30px;
+      font-size: 1.1em;
+    }
+
+    .back-link a {
+      color: #007bff;
+      text-decoration: none;
+    }
+
+    .back-link a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Booking Confirmed!</h1>
+    
+    <!-- Display Booking Details -->
+    <ul class="details-list">
+      <li><span>Name:</span> {{userName}}</li>
+      <li><span>Car:</span> {{carName}}</li>
+      <li><span>Start Date:</span> {{startDate}}</li>
+      <li><span>End Date:</span> {{endDate}}</li>
+    </ul>
+    
+    <!-- Link to View All Bookings -->
+    <div class="back-link">
+      <p><a href="/bookings">View all bookings</a></p>
+    </div>
+
+    <!-- Link to Make Another Booking -->
+    <div class="button">
+      <a href="/bookings/new">Make Another Booking</a>
+    </div>
+  </div>
+
+  <script>
+    try {
+      // Check if all necessary data is available
+      const userName = "{{userName}}";
+      const carName = "{{carName}}";
+      const startDate = "{{startDate}}";
+      const endDate = "{{endDate}}";
+
+      if (userName && carName && startDate && endDate) {
+        // Save the booking to localStorage when the page is loaded
+        const bookingData = {
+          userName: userName,
+          carName: carName,
+          startDate: startDate,
+          endDate: endDate
+        };
+
+        // Get existing bookings from localStorage or initialize an empty array
+        let bookings = JSON.parse(localStorage.getItem('bookings')) || [];
+        
+        // Push new booking data to the bookings array
+        bookings.push(bookingData);
+        
+        // Save the updated bookings array back to localStorage
+        localStorage.setItem('bookings', JSON.stringify(bookings));
+      } else {
+        console.error('Booking data is missing!');
+      }
+    } catch (error) {
+      console.error('Error saving to localStorage:', error);
+    }
+  </script>
+</body>
+</html>
