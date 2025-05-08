@@ -1,17 +1,308 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Cool Frontend App</title>
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap"
-    />
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<html>
+<head>
+    <title>Elite Rentals - Luxury Car Rental</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            background-color: #000;
+            font-family: 'Playfair Display', serif;
+            color: #fff;
+            min-height: 100vh;
+        }
+        .navbar {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 1.5rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+        .navbar-brand {
+            color: #c9a959 !important;
+            font-size: 1.8rem;
+            font-weight: 400;
+            letter-spacing: 2px;
+        }
+        .hero-section {
+            height: 100vh;
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1503376780353-7e6692767b70?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+        .hero-title {
+            color: #c9a959;
+            font-size: 4.5rem;
+            font-weight: 400;
+            letter-spacing: 3px;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        .hero-subtitle {
+            color: #fff;
+            font-size: 1.8rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+            margin-bottom: 40px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+        .btn-primary {
+            background: #c9a959;
+            border: none;
+            color: #000;
+            padding: 15px 40px;
+            border-radius: 0;
+            font-weight: 500;
+            letter-spacing: 2px;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+        .btn-primary:hover {
+            background: #b38f4a;
+            color: #000;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(201, 169, 89, 0.3);
+        }
+        .features-section {
+            padding: 100px 0;
+            background: #111;
+            position: relative;
+        }
+        .feature-card {
+            background: #000;
+            border: 1px solid #333;
+            padding: 40px 30px;
+            text-align: center;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(201, 169, 89, 0.1), transparent);
+            transform: translateX(-100%);
+            transition: 0.5s;
+        }
+        .feature-card:hover::before {
+            transform: translateX(100%);
+        }
+        .feature-card:hover {
+            border-color: #c9a959;
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(201, 169, 89, 0.1);
+        }
+        .feature-icon {
+            color: #c9a959;
+            font-size: 3rem;
+            margin-bottom: 25px;
+            transition: all 0.3s ease;
+        }
+        .feature-card:hover .feature-icon {
+            transform: scale(1.1);
+        }
+        .feature-title {
+            color: #c9a959;
+            font-size: 1.8rem;
+            font-weight: 400;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+        .feature-text {
+            color: #999;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+        .section-title {
+            color: #c9a959;
+            font-size: 3rem;
+            font-weight: 400;
+            text-align: center;
+            margin-bottom: 70px;
+            letter-spacing: 2px;
+            position: relative;
+        }
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 2px;
+            background: #c9a959;
+            margin: 20px auto;
+        }
+        .footer {
+            background: #111;
+            padding: 40px 0;
+            border-top: 1px solid #333;
+        }
+        .footer-text {
+            color: #999;
+            text-align: center;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+        .scroll-down {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #fff;
+            font-size: 2rem;
+            animation: bounce 2s infinite;
+            cursor: pointer;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-20px);
+            }
+            60% {
+                transform: translateY(-10px);
+            }
+        }
+        .stats-section {
+            background: #000;
+            padding: 80px 0;
+            border-top: 1px solid #333;
+            border-bottom: 1px solid #333;
+        }
+        .stat-item {
+            text-align: center;
+            padding: 30px;
+        }
+        .stat-number {
+            color: #c9a959;
+            font-size: 3rem;
+            font-weight: 400;
+            margin-bottom: 10px;
+        }
+        .stat-label {
+            color: #999;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                ELITE RENTALS
+            </a>
+        </div>
+    </nav>
+
+    <section class="hero-section">
+        <div class="container">
+            <div class="hero-content text-center">
+                <h1 class="hero-title">EXPERIENCE LUXURY</h1>
+                <p class="hero-subtitle">Drive the world's most prestigious vehicles</p>
+                <a href="/cars" class="btn btn-primary">EXPLORE OUR FLEET</a>
+            </div>
+        </div>
+        <div class="scroll-down">
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </section>
+
+    <section class="stats-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="stat-item">
+                        <div class="stat-number">50+</div>
+                        <div class="stat-label">LUXURY VEHICLES</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-item">
+                        <div class="stat-number">1000+</div>
+                        <div class="stat-label">HAPPY CLIENTS</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-item">
+                        <div class="stat-number">24/7</div>
+                        <div class="stat-label">SUPPORT</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-item">
+                        <div class="stat-number">5★</div>
+                        <div class="stat-label">RATING</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features-section">
+        <div class="container">
+            <h2 class="section-title">WHY CHOOSE US</h2>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-car"></i>
+                        </div>
+                        <h3 class="feature-title">PREMIUM FLEET</h3>
+                        <p class="feature-text">Choose from our exclusive collection of luxury and sports cars, each maintained to the highest standards of excellence.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <h3 class="feature-title">ELITE SERVICE</h3>
+                        <p class="feature-text">Experience personalized service with our dedicated team of luxury car specialists, available around the clock.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3 class="feature-title">PEACE OF MIND</h3>
+                        <p class="feature-text">Enjoy comprehensive insurance coverage and 24/7 roadside assistance with every rental, ensuring a worry-free experience.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <p class="footer-text">© 2024 ELITE RENTALS. ALL RIGHTS RESERVED.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.querySelector('.scroll-down').addEventListener('click', function() {
+            document.querySelector('.stats-section').scrollIntoView({ 
+                behavior: 'smooth' 
+            });
+        });
+    </script>
+</body>
 </html> 
