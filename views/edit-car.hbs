@@ -1,121 +1,6 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<<<<<<< Updated upstream
-    <title>Edit Car - Elite Rentals</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <style>
-        body {
-            background-color: #000;
-            font-family: 'Playfair Display', serif;
-            color: #fff;
-        }
-        .navbar {
-            background: rgba(0, 0, 0, 0.8);
-            padding: 1.5rem 0;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            backdrop-filter: blur(10px);
-        }
-        .navbar-brand {
-            color: #c9a959 !important;
-            font-size: 1.8rem;
-            font-weight: 400;
-            letter-spacing: 2px;
-        }
-        .edit-section {
-            margin-top: 100px;
-            padding: 2rem 0;
-        }
-        .edit-title {
-            color: #c9a959;
-            font-size: 2.5rem;
-            margin-bottom: 2rem;
-            text-align: center;
-            letter-spacing: 2px;
-        }
-        .edit-form {
-            background: #111;
-            padding: 2rem;
-            border: 1px solid #333;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        .form-label {
-            color: #c9a959;
-            font-size: 1.1rem;
-            margin-bottom: 0.5rem;
-        }
-        .form-control {
-            background: #000;
-            border: 1px solid #333;
-            color: #fff;
-            padding: 12px;
-            border-radius: 0;
-        }
-        .form-control:focus {
-            background: #000;
-            border-color: #c9a959;
-            color: #fff;
-            box-shadow: none;
-        }
-        .form-select {
-            background: #000;
-            border: 1px solid #333;
-            color: #fff;
-            padding: 12px;
-            border-radius: 0;
-        }
-        .form-select:focus {
-            background: #000;
-            border-color: #c9a959;
-            color: #fff;
-            box-shadow: none;
-        }
-        .btn-update {
-            background: #c9a959;
-            border: none;
-            color: #000;
-            padding: 12px 30px;
-            border-radius: 0;
-            font-weight: 500;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
-            width: 100%;
-            margin-top: 1rem;
-        }
-        .btn-update:hover {
-            background: #b38f4a;
-            transform: translateY(-2px);
-        }
-        .btn-cancel {
-            background: transparent;
-            border: 1px solid #c9a959;
-            color: #c9a959;
-            padding: 12px 30px;
-            border-radius: 0;
-            font-weight: 500;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
-            width: 100%;
-            margin-top: 1rem;
-        }
-        .btn-cancel:hover {
-            background: #c9a959;
-            color: #000;
-        }
-        .image-preview {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            margin-bottom: 1rem;
-            border: 1px solid #333;
-        }
-    </style>
-=======
   <meta charset="UTF-8">
   <title>Edit Car</title>
   <style>
@@ -209,121 +94,21 @@
       display: none;
     }
   </style>
->>>>>>> Stashed changes
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark">
-        <div class="container">
-            <a class="navbar-brand" href="/">ELITE RENTALS</a>
-        </div>
-    </nav>
 
-<<<<<<< Updated upstream
-    <div class="container edit-section">
-        <h1 class="edit-title">EDIT VEHICLE</h1>
-        
-        <form action="/cars/{{car.id}}?_method=PUT" method="POST" class="edit-form">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label for="name" class="form-label">Vehicle Name</label>
-                        <input type="text" class="form-control" id="name" name="name" value="{{car.name}}" required>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="brand" class="form-label">Brand</label>
-                        <input type="text" class="form-control" id="brand" name="brand" value="{{car.brand}}" required>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="category" class="form-label">Category</label>
-                        <select class="form-select" id="category" name="category" required>
-                            <option value="Luxury" {{#if (eq car.category "Luxury")}}selected{{/if}}>Luxury</option>
-                            <option value="Sports" {{#if (eq car.category "Sports")}}selected{{/if}}>Sports</option>
-                            <option value="SUV" {{#if (eq car.category "SUV")}}selected{{/if}}>SUV</option>
-                            <option value="Sedan" {{#if (eq car.category "Sedan")}}selected{{/if}}>Sedan</option>
-                        </select>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="transmission" class="form-label">Transmission</label>
-                        <select class="form-select" id="transmission" name="transmission" required>
-                            <option value="Automatic" {{#if (eq car.transmission "Automatic")}}selected{{/if}}>Automatic</option>
-                            <option value="Manual" {{#if (eq car.transmission "Manual")}}selected{{/if}}>Manual</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label for="fuelType" class="form-label">Fuel Type</label>
-                        <select class="form-select" id="fuelType" name="fuelType" required>
-                            <option value="Petrol" {{#if (eq car.fuelType "Petrol")}}selected{{/if}}>Petrol</option>
-                            <option value="Diesel" {{#if (eq car.fuelType "Diesel")}}selected{{/if}}>Diesel</option>
-                            <option value="Electric" {{#if (eq car.fuelType "Electric")}}selected{{/if}}>Electric</option>
-                            <option value="Hybrid" {{#if (eq car.fuelType "Hybrid")}}selected{{/if}}>Hybrid</option>
-                        </select>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="seats" class="form-label">Number of Seats</label>
-                        <input type="number" class="form-control" id="seats" name="seats" value="{{car.seats}}" required>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="pricePerDay" class="form-label">Price Per Day ($)</label>
-                        <input type="number" class="form-control" id="pricePerDay" name="pricePerDay" value="{{car.pricePerDay}}" required>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="image" class="form-label">Image URL</label>
-                        <input type="url" class="form-control" id="image" name="image" value="{{car.image}}" required>
-                    </div>
-                </div>
-            </div>
-=======
   <div class="edit-container">
     <h1>Edit Car - {{car.name}}</h1>
     <form action="/cars/{{car.id}}?_method=PUT" method="POST" enctype="multipart/form-data">
       <label for="name">Name</label>
       <input type="text" id="name" name="name" value="{{car.name}}" required>
->>>>>>> Stashed changes
 
-            <div class="mb-3">
-                <label class="form-label">Current Image</label>
-                <img src="{{car.image}}" alt="{{car.name}}" class="image-preview">
-            </div>
+      <label for="brand">Brand</label>
+      <input type="text" id="brand" name="brand" value="{{car.brand}}" required>
 
-            <div class="mb-3">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="available" name="available" {{#if car.available}}checked{{/if}}>
-                    <label class="form-check-label" for="available">Available for Rent</label>
-                </div>
-            </div>
+      <label for="pricePerDay">Price Per Day</label>
+      <input type="number" id="pricePerDay" name="pricePerDay" value="{{car.pricePerDay}}" required>
 
-<<<<<<< Updated upstream
-            <div class="row">
-                <div class="col-md-6">
-                    <button type="submit" class="btn btn-update">UPDATE VEHICLE</button>
-                </div>
-                <div class="col-md-6">
-                    <a href="/cars" class="btn btn-cancel">CANCEL</a>
-                </div>
-            </div>
-        </form>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // Preview image when URL is changed
-        const imageInput = document.getElementById('image');
-        const imagePreview = document.querySelector('.image-preview');
-        
-        imageInput.addEventListener('change', function() {
-            imagePreview.src = this.value;
-        });
-    </script>
-=======
       <label for="available">Available</label>
       <select id="available" name="available">
         <option value="true" {{#if car.available}}selected{{/if}}>Yes</option>
@@ -365,6 +150,5 @@
     }
   </script>
 
->>>>>>> Stashed changes
 </body>
 </html>
