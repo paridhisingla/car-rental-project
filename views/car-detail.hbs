@@ -175,6 +175,7 @@
         </div>
     </nav>
 
+<<<<<<< Updated upstream
     <div class="container car-detail-section">
         <div class="row">
             <div class="col-md-8">
@@ -204,6 +205,17 @@
                         <div class="feature-value">{{car.category}}</div>
                     </div>
                 </div>
+=======
+  <div class="car-detail">
+    <img class="car-image" src="{{car.image}}" alt="{{car.name}}" onerror="this.src='https://source.unsplash.com/500x400/?car,{{car.brand}}'" />
+    
+    <div class="car-info">
+      <h2>{{car.name}}</h2>
+      <p><strong>Brand:</strong> {{car.brand}}</p>
+      <p><strong>Car ID:</strong> {{car.id}}</p>
+      <p><strong>Available:</strong> {{#if car.available}}✅ Yes{{else}}❌ No{{/if}}</p>
+      <p class="price"><strong>Price per Day:</strong> ${{car.pricePerDay}}</p>
+>>>>>>> Stashed changes
 
                 <p class="car-description">
                     Experience luxury and performance with the {{car.name}}. This {{car.brand}} masterpiece combines elegant design with powerful engineering, offering an unforgettable driving experience. Perfect for both city cruising and long-distance journeys.

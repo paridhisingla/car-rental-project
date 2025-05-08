@@ -276,9 +276,32 @@
     </style>
 </head>
 <body>
+<<<<<<< Updated upstream
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
             <a class="navbar-brand" href="/">ELITE RENTALS</a>
+=======
+
+  <h1>Available Cars</h1>
+
+  {{#each cars}}
+    <div class="car-card">
+      <img class="car-image" src="{{this.image}}" alt="{{this.name}}" onerror="this.src='https://source.unsplash.com/400x300/?car,{{this.brand}}'" />
+
+      <div class="car-info">
+        <h2>{{this.name}}</h2>
+        <p><strong>Brand:</strong> {{this.brand}}</p>
+        <p><strong>ID:</strong> {{this.id}}</p>
+        <p class="price"><strong>Price per Day:</strong> ${{this.pricePerDay}}</p>
+        <p><strong>Available:</strong> {{#if this.available}}✅ Yes{{else}}❌ No{{/if}}</p>
+
+        <div class="btn-group">
+          <a class="book-btn" href="/bookings/new?carId={{this.id}}">Book Now</a>
+          <a class="edit-btn" href="/cars/{{this.id}}/edit">Edit</a>
+          <form action="/cars/{{this.id}}?_method=DELETE" method="POST" style="display:inline;" onsubmit="return confirm('Delete this car?');">
+            <button type="submit" class="delete-btn">Delete</button>
+          </form>
+>>>>>>> Stashed changes
         </div>
     </nav>
 
