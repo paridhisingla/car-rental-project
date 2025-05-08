@@ -18,6 +18,10 @@ hbs.registerHelper('times', function(n, block) {
     return accum;
 });
 
+hbs.registerHelper('multiply', function(a, b) {
+    return a * b;
+});
+
 hbs.registerHelper('formatDate', function(dateString) {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', {
