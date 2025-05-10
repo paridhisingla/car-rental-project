@@ -1,116 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Available Cars</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f3f3f3;
-      padding: 40px;
-    }
-
-    h1 {
-      text-align: center;
-      margin-bottom: 40px;
-    }
-
-    .car-card {
-      display: flex;
-      background-color: #fff;
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      margin-bottom: 30px;
-      max-width: 800px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    .car-image {
-      width: 40%;
-      object-fit: cover;
-    }
-
-    .car-info {
-      padding: 20px;
-      width: 60%;
-    }
-
-    .car-info h2 {
-      margin-top: 0;
-      margin-bottom: 10px;
-      color: #333;
-    }
-
-    .car-info p {
-      margin: 6px 0;
-      color: #555;
-    }
-
-    .car-info .price {
-      font-weight: bold;
-      color: #28a745;
-      margin-top: 12px;
-    }
-
-    .btn-group {
-      margin-top: 20px;
-    }
-
-    .btn-group a,
-    .btn-group form button {
-      display: inline-block;
-      padding: 8px 14px;
-      margin-right: 8px;
-      text-decoration: none;
-      font-size: 14px;
-      border-radius: 4px;
-      border: none;
-      cursor: pointer;
-    }
-
-    .book-btn {
-      background-color: #007bff;
-      color: white;
-    }
-
-    .edit-btn {
-      background-color: #ffc107;
-      color: black;
-    }
-
-    .delete-btn {
-      background-color: #dc3545;
-      color: white;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Cars</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .car-card {
+            transition: transform 0.2s;
+        }
+        .car-card:hover {
+            transform: translateY(-5px);
+        }
+        .car-image {
+            height: 200px;
+            object-fit: cover;
+        }
+    </style>
 </head>
 <body>
-
-  <h1>Available Cars</h1>
-
-  {{#each cars}}
-    <div class="car-card">
-      <img class="car-image" src="{{this.image}}" alt="{{this.name}}" onerror="this.src='https://source.unsplash.com/400x300/?car,{{this.brand}}'" />
-
-      <div class="car-info">
-        <h2>{{this.name}}</h2>
-        <p><strong>Brand:</strong> {{this.brand}}</p>
-        <p><strong>ID:</strong> {{this.id}}</p>
-        <p class="price"><strong>Price per Day:</strong> ${{this.pricePerDay}}</p>
-        <p><strong>Available:</strong> {{#if this.available}}✅ Yes{{else}}❌ No{{/if}}</p>
-
-        <div class="btn-group">
-          <a class="book-btn" href="/bookings/new?carId={{this.id}}">Book Now</a>
-          <a class="edit-btn" href="/cars/{{this.id}}/edit">Edit</a>
-          <form action="/cars/{{this.id}}?_method=DELETE" method="POST" style="display:inline;" onsubmit="return confirm('Delete this car?');">
-            <button type="submit" class="delete-btn">Delete</button>
-          </form>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">Car Rental System</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/cars">Cars</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/bookings">Bookings</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/logout">Logout</a>
+                    </li>
+                </ul>
+            </div>
         </div>
-      </div>
-    </div>
-  {{/each}}
+    </nav>
 
+    <div class="container mt-4">
+        <h1 class="mb-4">Available Cars</h1>
+        
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {{#each cars}}
+            <div class="col">
+                <div class="card h-100 car-card">
+                    {{#if image}}
+                    <img src="{{image}}" class="card-img-top car-image" alt="{{name}}">
+                    {{else}}
+                    <img src="/images/default-car.jpg" class="card-img-top car-image" alt="Default Car">
+                    {{/if}}
+                    <div class="card-body">
+                        <h5 class="card-title">{{name}}</h5>
+                        <p class="card-text">
+                            <strong>Brand:</strong> {{brand}}<br>
+                            <strong>Price per day:</strong> ${{pricePerDay}}<br>
+                            <strong>Status:</strong> 
+                            <span class="badge {{#if available}}bg-success{{else}}bg-danger{{/if}}">
+                                {{#if available}}Available{{else}}Not Available{{/if}}
+                            </span>
+                        </p>
+                        <div class="d-flex justify-content-between">
+                            <a href="/cars/{{_id}}/edit" class="btn btn-primary">Edit</a>
+                            <form action="/cars/{{_id}}?_method=DELETE" method="POST" style="display: inline;">
+                                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this car?')">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -6,6 +6,10 @@ const data = require("./data");
 const mongoose = require("mongoose");
 const Car = require("./models/Car");
 const Booking = require("./models/Booking");
+const User = require("./models/User");
+const jwt = require("jsonwebtoken");
+const cookieParser = require("cookie-parser");
+const { auth, JWT_SECRET } = require("./middleware/auth");
 
 const app = express();
 
@@ -40,14 +44,77 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(methodOverride("_method"));
+app.use(cookieParser());
 
-// Routes
-app.get("/", (req, res) => {
+// Authentication Routes
+app.get("/login", (req, res) => {
+  res.render("login", { error: null });
+});
+
+app.get("/signup", (req, res) => {
+  res.render("signup", { error: null });
+});
+
+app.post("/signup", async (req, res) => {
+  try {
+    const { username, email, password, confirmPassword } = req.body;
+
+    if (password !== confirmPassword) {
+      return res.render("signup", { error: "Passwords do not match" });
+    }
+
+    const existingUser = await User.findOne({ $or: [{ email }, { username }] });
+    if (existingUser) {
+      return res.render("signup", { error: "Email or username already exists" });
+    }
+
+    const user = new User({ username, email, password });
+    await user.save();
+
+    const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '24h' });
+    res.cookie('token', token, { httpOnly: true });
+    res.redirect("/");
+  } catch (error) {
+    console.error("Signup error:", error);
+    res.render("signup", { error: "Error creating account" });
+  }
+});
+
+app.post("/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.render("login", { error: "Invalid email or password" });
+    }
+
+    const isMatch = await user.comparePassword(password);
+    if (!isMatch) {
+      return res.render("login", { error: "Invalid email or password" });
+    }
+
+    const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '24h' });
+    res.cookie('token', token, { httpOnly: true });
+    res.redirect("/");
+  } catch (error) {
+    console.error("Login error:", error);
+    res.render("login", { error: "Error logging in" });
+  }
+});
+
+app.get("/logout", (req, res) => {
+  res.clearCookie('token');
+  res.redirect("/login");
+});
+
+// Protected Routes
+app.get("/", auth, (req, res) => {
   res.render("home", { title: "Car Rental System" });
 });
 
 // Cars Routes
-app.get("/cars", async (req, res) => {
+app.get("/cars", auth, async (req, res) => {
   try {
     const cars = await Car.find();
     res.render("cars", { cars });
@@ -90,17 +157,27 @@ app.get("/cars/:id", (req, res) => {
   res.render("car-detail", { car });
 });
 
-app.get("/cars/:id/edit", (req, res) => {
-  const car = data.cars.find(c => c.id === req.params.id);
-  if (!car) return res.status(404).send("Car not found");
-  res.render("edit-car", { car });
+app.get("/cars/:id/edit", auth, async (req, res) => {
+  try {
+    const car = await Car.findById(req.params.id);
+    if (!car) {
+      return res.status(404).send("Car not found");
+    }
+    res.render("edit-car", { car });
+  } catch (error) {
+    console.error("Error fetching car for edit:", error);
+    res.status(500).send("Error fetching car");
+  }
 });
 
-app.put("/cars/:id", upload.single('carImage'), (req, res) => {
+app.put("/cars/:id", auth, upload.single('carImage'), async (req, res) => {
   try {
-    const car = data.cars.find(c => c.id === req.params.id);
-    if (!car) return res.status(404).send("Car not found");
+    const car = await Car.findById(req.params.id);
+    if (!car) {
+      return res.status(404).send("Car not found");
+    }
 
+    // Update car details
     car.name = req.body.name;
     car.brand = req.body.brand;
     car.pricePerDay = Number(req.body.pricePerDay);
@@ -111,17 +188,32 @@ app.put("/cars/:id", upload.single('carImage'), (req, res) => {
       car.image = `/uploads/${req.file.filename}`;
     }
     
-    res.redirect(`/cars/${car.id}`);
-
+    await car.save();
+    res.redirect("/cars");
   } catch (error) {
     console.error("Error updating car:", error);
     res.status(500).send("Error updating car");
   }
 });
 
-app.delete("/cars/:id", (req, res) => {
+app.delete("/cars/:id", auth, async (req, res) => {
   try {
-    data.cars = data.cars.filter(c => c.id !== req.params.id);
+    const car = await Car.findById(req.params.id);
+    if (!car) {
+      return res.status(404).send("Car not found");
+    }
+
+    // Check if car has any active bookings
+    const activeBooking = await Booking.findOne({ 
+      carId: car._id,
+      endDate: { $gte: new Date() }
+    });
+
+    if (activeBooking) {
+      return res.status(400).send("Cannot delete car with active bookings");
+    }
+
+    await Car.findByIdAndDelete(req.params.id);
     res.redirect("/cars");
   } catch (error) {
     console.error("Error deleting car:", error);
@@ -134,21 +226,21 @@ app.get("/bookings", async (req, res) => {
   try {
     const bookings = await Booking.find().populate('carId');
     const formattedBookings = bookings.map(booking => {
-      const start = new Date(booking.startDate);
-      const end = new Date(booking.endDate);
-      const diffTime = Math.abs(end - start);
-      const totalDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const start = new Date(booking.startDate);
+    const end = new Date(booking.endDate);
+    const diffTime = Math.abs(end - start);
+    const totalDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-      return {
+    return {
         id: booking._id,
         carName: booking.carId ? booking.carId.name : "Deleted Car",
         userName: booking.userName,
         startDate: booking.startDate,
         endDate: booking.endDate,
-        totalDays,
+      totalDays,
         totalPrice: booking.carId ? booking.carId.pricePerDay * totalDays : "N/A"
-      };
-    });
+    };
+  });
     res.render("bookings", { bookings: formattedBookings });
   } catch (error) {
     console.error("Error fetching bookings:", error);
