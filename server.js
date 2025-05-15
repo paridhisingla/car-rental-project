@@ -3,6 +3,18 @@ const path = require("path");
 const methodOverride = require("method-override");
 const hbs = require("hbs");
 const data = require("./data");
+const mongoose = require("mongoose");
+const Booking = require("./models/Booking");
+
+// Connect to MongoDB
+mongoose.connect('mongodb://localhost:27017/car-rental', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}).then(() => {
+    console.log('Connected to MongoDB successfully');
+}).catch((err) => {
+    console.error('MongoDB connection error:', err);
+});
 
 const app = express();
 
@@ -177,18 +189,36 @@ app.get("/bookings/new", (req, res) => {
     res.render("new-booking", { cars: data.cars.filter(c => c.available) });
 });
 
-app.post("/bookings", (req, res) => {
+app.post("/bookings", async (req, res) => {
     const car = data.cars.find(c => c.id === req.body.carId);
     if (!car || !car.available) return res.status(400).send("Car not available");
 
-    const newBooking = {
-        id: Date.now().toString(),
-        ...req.body
-    };
+    const start = new Date(req.body.startDate);
+    const end = new Date(req.body.endDate);
+    const diffTime = Math.abs(end - start);
+    const totalDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const totalPrice = car.pricePerDay * totalDays;
 
-    car.available = false;
-    data.bookings.push(newBooking);
-    res.redirect(`/bookings/${newBooking.id}/success`);
+    try {
+        const newBooking = await Booking.create({
+            carId: req.body.carId,
+            userName: req.body.userName,
+            startDate: req.body.startDate,
+            endDate: req.body.endDate,
+            totalPrice: totalPrice
+        });
+
+        car.available = false;
+        data.bookings.push({
+            id: newBooking._id.toString(),
+            ...req.body
+        });
+        
+        res.redirect(`/bookings/${newBooking._id}/success`);
+    } catch (error) {
+        console.error('Error creating booking:', error);
+        res.status(500).send('Error creating booking. Please try again.');
+    }
 });
 
 app.get("/bookings/:id/success", (req, res) => {
