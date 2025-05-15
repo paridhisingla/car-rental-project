@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 const User = require('../models/User');
-const { isAuthenticated } = require('../middleware/auth');
 
 // Register page
 router.get('/register', (req, res) => {
@@ -90,3 +89,4 @@ router.get('/logout', (req, res) => {
 });
 
 module.exports = router;
+
